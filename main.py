@@ -5,16 +5,12 @@ import google.generativeai as genai
 api_key = 'AIzaSyCUKH9lKuKJufWciMu4p7AD28ATGaO-mmE'
 genai.configure(api_key=api_key)
 
-prompt = (
-    "Summarize the following article in three bullet points:\n"
-    "Artificial intelligence is transforming education by personalizing learning experiences, "
-    "automating administrative tasks, and providing intelligent tutoring systems. "
-    "It enables educators to focus more on student engagement and less on routine work. "
-    "As AI continues to evolve, its impact on education is expected to grow even further."
-)
+topic = "photosynthesis"
+difficulty = "beginner"
+prompt = f"Explain the concept of {topic} in simple terms suitable for a {difficulty} level student."
 
 model = genai.GenerativeModel('gemini-pro')
 response = model.generate_content(prompt)
 
-print("Zero-Shot Prompt Output:")
+print("Dynamic Prompt Output:")
 print(response.text.strip())
