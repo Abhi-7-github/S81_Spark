@@ -1,8 +1,9 @@
 
-"""
-Top P (nucleus sampling) in LLMs:
 
-Top P is a parameter that controls the diversity of AI-generated responses. It sets a probability threshold so the model only considers the smallest set of most likely next words whose cumulative probability exceeds Top P. Lower values make output more focused; higher values make it more creative.
+"""
+Top K in LLMs:
+
+Top K is a parameter that controls the diversity of AI-generated responses. It limits the model to sampling from only the top K most likely next words at each step. Lower values make output more focused and deterministic; higher values allow for more creative and varied responses.
 """
 
 import google.generativeai as genai
@@ -15,9 +16,10 @@ topic = "photosynthesis"
 difficulty = "beginner"
 prompt = f"Explain the concept of {topic} in simple terms suitable for a {difficulty} level student."
 
+
 model = genai.GenerativeModel('gemini-pro')
-# Set top_p to 0.7 for nucleus sampling
-response = model.generate_content(prompt, generation_config={"top_p": 0.7})
+# Set top_k to 40 for sampling from the top 40 most likely tokens
+response = model.generate_content(prompt, generation_config={"top_k": 40})
 
 print("Dynamic Prompt Output:")
 print(response.text.strip())
@@ -32,3 +34,4 @@ if hasattr(response, 'usage_metadata'):
 	print(f"Response tokens: {candidates_tokens}")
 else:
 	print("Token usage information not available for this response.")
+	
