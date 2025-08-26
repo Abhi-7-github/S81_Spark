@@ -1,9 +1,10 @@
 
 
-"""
-Top K in LLMs:
 
-Top K is a parameter that controls the diversity of AI-generated responses. It limits the model to sampling from only the top K most likely next words at each step. Lower values make output more focused and deterministic; higher values allow for more creative and varied responses.
+"""
+Structured Output in LLMs:
+
+Structured output is when you instruct the AI model to return its response in a specific format, such as JSON or a table, making it easier to parse and use programmatically. This is useful for extracting key information or integrating with other systems.
 """
 
 import google.generativeai as genai
@@ -12,16 +13,33 @@ import google.generativeai as genai
 api_key = 'AIzaSyCUKH9lKuKJufWciMu4p7AD28ATGaO-mmE'
 genai.configure(api_key=api_key)
 
+
 topic = "photosynthesis"
 difficulty = "beginner"
-prompt = f"Explain the concept of {topic} in simple terms suitable for a {difficulty} level student."
+prompt = (
+		f"""
+		Provide a structured JSON output with the following fields:
+		- topic: the topic explained
+		- explanation: a simple explanation suitable for a {difficulty} level student
+		- key_points: a list of 3 key points about the topic
+		Example output:
+		{{
+			"topic": "...",
+			"explanation": "...",
+			"key_points": ["...", "...", "..."]
+		}}
+		Now, use the topic: {topic}
+		"""
+)
+
 
 
 model = genai.GenerativeModel('gemini-pro')
 # Set top_k to 40 for sampling from the top 40 most likely tokens
 response = model.generate_content(prompt, generation_config={"top_k": 40})
 
-print("Dynamic Prompt Output:")
+
+print("Structured Output:")
 print(response.text.strip())
 
 # Log the number of tokens used (input + output)
