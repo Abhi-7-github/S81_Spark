@@ -1,4 +1,33 @@
 """
+One-Shot Prompting Example
+
+One-shot prompting is when you provide the AI with a single example of the task you want it to perform, along with your instruction. This helps the model understand the format and style you expect in its response.
+"""
+
+import google.generativeai as genai
+
+# Replace 'your-api-key' with your actual Gemini API key
+api_key = 'your-api-key'
+genai.configure(api_key=api_key)
+
+one_shot_prompt = (
+    "Summarize the following article in three bullet points.\n\n"
+    "Example:\n"
+    "Article: The sun is a star at the center of our solar system. It provides light and heat to Earth.\n"
+    "Summary:\n"
+    "- The sun is a star.\n"
+    "- It is at the center of our solar system.\n"
+    "- It provides light and heat to Earth.\n\n"
+    "Now summarize this article:\n"
+    "Artificial intelligence is transforming education by personalizing learning experiences, automating administrative tasks, and providing intelligent tutoring systems. It enables educators to focus more on student engagement and less on routine work. As AI continues to evolve, its impact on education is expected to grow even further."
+)
+
+model = genai.GenerativeModel('gemini-pro')
+response = model.generate_content(one_shot_prompt)
+
+print("One-Shot Prompt Output:")
+print(response.text.strip())
+"""
 RTFC Framework Example for Spark AI
 
 Role: Spark, an AI-powered personalized learning companion
@@ -45,3 +74,4 @@ if hasattr(response, 'usage_metadata'):
     print(f"Response tokens: {candidates_tokens}")
 else:
     print("Token usage information not available for this response.")
+
