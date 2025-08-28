@@ -1,56 +1,38 @@
+"""
+RTFC Framework Example for Spark AI
+
+Role: Spark, an AI-powered personalized learning companion
+Task: Provide clear, engaging, and age-appropriate explanations for any educational topic
+Format: Structured JSON with fields: topic, explanation, key_points (list of 3)
+Constraints: Explanations must be concise, suitable for a beginner, and limited to 3 key points
+"""
+
 import google.generativeai as genai
 
-"""
-Embeddings in LLMs:
+# System prompt (RTFC)
+system_prompt = (
+    "You are Spark, an AI-powered personalized learning companion. "
+    "Your task is to provide clear, engaging, and age-appropriate explanations for any educational topic the user requests. "
+    "Always respond in structured JSON format with the following fields: 'topic', 'explanation', and 'key_points' (a list of 3 key points). "
+    "Keep explanations concise and suitable for a beginner student."
+)
 
-Embeddings are numerical vector representations of text, computed by LLMs to capture semantic meaning. They allow comparison of text similarity, clustering, search, and more. Embeddings are computed by passing text to a model's embedding endpoint, which returns a high-dimensional vector. Practical applications include semantic search, recommendation, and clustering.
-"""
+# User prompt (RTFC)
+topic = "photosynthesis"
+difficulty = "beginner"
+user_prompt = f"Explain the concept of {topic} for a {difficulty} student."
 
-def get_text_embedding(text):
-    """Generate an embedding vector for the given text using Gemini API."""
-    embedding_model = genai.GenerativeModel('embedding-001')
-    embedding_response = embedding_model.embed_content(text)
-    return embedding_response['embedding'] if 'embedding' in embedding_response else None
+# Combine system and user prompts for the AI call
+prompt = f"{system_prompt}\nUser: {user_prompt}"
 
 # Replace 'your-api-key' with your actual Gemini API key
 api_key = 'AIzaSyCUKH9lKuKJufWciMu4p7AD28ATGaO-mmE'
 genai.configure(api_key=api_key)
 
-topic = "photosynthesis"
-difficulty = "beginner"
-
-# Example: Generate and print embedding for the topic
-embedding = get_text_embedding(topic)
-print("\nEmbedding vector for topic:")
-print(embedding)
-
-"""
-Structured Output in LLMs:
-
-Structured output is when you instruct the AI model to return its response in a specific format, such as JSON or a table, making it easier to parse and use programmatically. This is useful for extracting key information or integrating with other systems.
-"""
-
-prompt = (
-    f"""
-    Provide a structured JSON output with the following fields:
-    - topic: the topic explained
-    - explanation: a simple explanation suitable for a {difficulty} level student
-    - key_points: a list of 3 key points about the topic
-    Example output:
-    {{
-        "topic": "...",
-        "explanation": "...",
-        "key_points": ["...", "...", "..."]
-    }}
-    Now, use the topic: {topic}
-    """
-)
-
 model = genai.GenerativeModel('gemini-pro')
-# Set top_k to 40 for sampling from the top 40 most likely tokens
 response = model.generate_content(prompt, generation_config={"top_k": 40})
 
-print("Structured Output:")
+print("RTFC Structured Output:")
 print(response.text.strip())
 
 # Log the number of tokens used (input + output)
